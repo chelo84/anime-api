@@ -1,25 +1,42 @@
 import falcon
 from bson import json_util
 
+from animeapi.util.list_util import ListUtil
+
 
 class Collection(object):
-    ANIMES_PER_PAGE = 20
 
     def __init__(self, animes_collection):
         self._animes_collection = animes_collection
 
     def on_get(self, req, resp):
         try:
-            page = int(req.get_param("page", default=1))
+            offset = int(req.get_param('offset', default=1))
+            limit = int(req.get_param('limit', default=20))
+            genres = ListUtil.filter_list(
+                None,
+                req.get_param('genres', default='').split(',')
+            )
+
+            fields = ListUtil.filter_list(
+                None,
+                req.get_param('fields', default='').split(',')
+            )
+
+            result = list(
+                self._animes_collection.find(({'genre': {'$in': genres} if len(genres) > 0 else None}))
+                    .skip(offset)
+                    .limit(limit)
+            )
+
+            animes = ListUtil.get_only_specific_fields(result, fields)
+
+            resp.body = json_util.dumps(animes)
+            resp.status = falcon.HTTP_OK
+
         except ValueError:
-            msg = "Page parameter need to be an integer"
+            msg = "Limit and offset parameters need to be a positive integer number"
             raise falcon.HTTPBadRequest('Bad request', msg)
-
-        print(page)
-        result = json_util.dumps(list(self._animes_collection
-                      .find({})
-                      .skip((page - 1) * self.ANIMES_PER_PAGE)
-                      .limit(self.ANIMES_PER_PAGE)))
-
-        resp.body = result
-        resp.status = falcon.HTTP_OK
+        except KeyError as ex:
+            msg = "The field {field} is not valid!".format(field=ex)
+            raise falcon.HTTPBadRequest('Bad request', msg)

@@ -10,7 +10,7 @@ MONGO_DB = 'animeDB'
 
 def create_app(collection):
     api = falcon.API()
-    api.add_route('/anime', anime.Collection(collection))
+    api.add_route('/animes', anime.Collection(collection))
     # api.add_route('/anime/{page:int}', anime.Collection(collection))
     return api
 
