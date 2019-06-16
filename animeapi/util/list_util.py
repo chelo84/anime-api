@@ -7,18 +7,3 @@ class ListUtil(object):
                 list_to_filter
             )
         )
-
-    @staticmethod
-    def get_only_specific_fields(result, fields):
-        elements = []
-        if fields and len(fields) > 0:
-            for r in result:
-                element = {}
-                for field in fields:
-                    element[field] = r[field.strip()]
-
-                elements.append(element)
-        else:
-            elements = result
-
-        return elements
