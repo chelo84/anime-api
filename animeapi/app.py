@@ -11,7 +11,7 @@ from animeapi.local_settings import environment
 if environment == 'prd':
     MONGO_SERVER = '{user}:{password}@{host}'.format(user=os.environ['MONGO_USER'], password=os.environ['MONGO_PASS'],
                                                      host=os.environ['MONGO_HOST'])
-    MONGO_PORT = os.environ['MONGO_PORT']
+    MONGO_PORT = int(os.environ['MONGO_PORT'])
     MONGO_ANIMES_COLLECTION = 'animes'
     MONGO_DB = os.environ['MONGO_DB']
 else:
