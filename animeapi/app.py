@@ -1,6 +1,5 @@
 import os
 import sys
-from urllib.parse import quote
 
 import falcon
 import pymongo
@@ -10,12 +9,14 @@ import animeapi.anime as anime
 from animeapi.local_settings import environment
 
 if environment == 'prd':
-    MONGO_SERVER = quote(
-        '{user}:{password}@{host}'.format(user=os.environ['MONGO_USER'], password=os.environ['MONGO_PASS'],
-                                          host=os.environ['MONGO_HOST']))
+    MONGO_SERVER = os.environ['MONGO_HOST']
+    MONGO_USER = os.environ['MONGO_USER']
+    MONGO_PASS = os.environ['MONGO_PASS']
     MONGO_PORT = int(os.environ['MONGO_PORT'])
     MONGO_ANIMES_COLLECTION = 'animes'
     MONGO_DB = os.environ['MONGO_DB']
+    print('Mongo user: ' + MONGO_USER +
+          '\nMongo pass: ' + MONGO_PASS)
 else:
     MONGO_SERVER = '{host}'.format(host='localhost')
     MONGO_PORT = 27017
@@ -25,6 +26,8 @@ else:
 print('Mongo server: ' + MONGO_SERVER +
       '\nMongo port: ' + str(MONGO_PORT) +
       '\nMongo DB: ' + MONGO_DB +
+      '\nMongo user: ' + (MONGO_USER or 'local') +
+      '\nMongo pass: ' + (MONGO_PASS or 'local') +
       '\nMongo collection: ' + MONGO_ANIMES_COLLECTION)
 sys.stdout.flush()
 
@@ -52,6 +55,9 @@ def get_app():
         MONGO_PORT
     )
     db = connection[MONGO_DB]
+    if environment == 'prd':
+        db.authenticate(MONGO_USER, MONGO_PASS)
+
     animes_collection = db[MONGO_ANIMES_COLLECTION]
 
     return create_app(animes_collection)
