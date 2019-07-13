@@ -1,1 +1,1 @@
-web: waitress-serve animeapi.app:api --port=$PORT --log-level=DEBUG --worker-class=gevent
+web: waitress-serve —port=$PORT animeapi.app:api
