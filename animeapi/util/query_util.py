@@ -14,6 +14,17 @@ class QueryUtil(object):
         }
 
     @staticmethod
+    def query_all(query_list):
+        return {
+            '$all': list(
+                map(
+                    lambda query_param: re.compile('^' + query_param + '$', re.IGNORECASE),
+                    query_list
+                )
+            )
+        }
+
+    @staticmethod
     def query_regex(query_param):
         return re.compile(query_param, re.IGNORECASE)
 
@@ -32,6 +43,6 @@ class QueryUtil(object):
     @staticmethod
     def query_between(query_param_min, query_param_max):
         return {
-            '$gt': query_param_min,
-            '$lt': query_param_max
+            '$gte': query_param_min,
+            '$lte': query_param_max
         }

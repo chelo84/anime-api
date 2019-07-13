@@ -1,5 +1,7 @@
 import falcon
 import pymongo
+from falcon.http_status import HTTPStatus
+
 import animeapi.anime as anime
 
 MONGO_SERVER = 'localhost'
@@ -8,8 +10,18 @@ MONGO_ANIMES_COLLECTION = 'animes'
 MONGO_DB = 'animeDB'
 
 
+class HandleCORS(object):
+    def process_request(self, req, resp):
+        resp.set_header('Access-Control-Allow-Origin', '*')
+        resp.set_header('Access-Control-Allow-Methods', '*')
+        resp.set_header('Access-Control-Allow-Headers', '*')
+        resp.set_header('Access-Control-Max-Age', 1728000)  # 20 days
+        if req.method == 'OPTIONS':
+            raise HTTPStatus(falcon.HTTP_200, body='\n')
+
+
 def create_app(collection):
-    api = falcon.API()
+    api = falcon.API(middleware=[HandleCORS()])
     api.add_route('/animes', anime.Collection(collection))
     # api.add_route('/anime/{page:int}', anime.Collection(collection))
     return api

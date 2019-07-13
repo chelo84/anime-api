@@ -21,7 +21,13 @@ class Collection(object):
         query = {}
 
         if len(params['genres']) > 0:
-            query['genres'] = QueryUtil.query_in(params['genres'])
+            query['genres'] = QueryUtil.query_all(params['genres'])
+        if len(params['producers']) > 0:
+            query['producers'] = QueryUtil.query_in(params['producers'])
+        if len(params['studios']) > 0:
+            query['studios'] = QueryUtil.query_in(params['studios'])
+        if len(params['source']) > 0:
+            query['source'] = QueryUtil.query_in(params['source'])
         if params['name']:
             query['name'] = QueryUtil.query_regex(params['name'])
 
@@ -36,7 +42,7 @@ class Collection(object):
                 .sort(params['order_by'])
         )
 
-        resp.body = json_util.dumps(result, indent=2)
+        resp.body = json_util.dumps(result, indent=4)
         resp.status = falcon.HTTP_OK
 
     def get_params(self, req):
@@ -67,7 +73,7 @@ class Collection(object):
                     None,
                     req.get_param('studios', default='').split(',')
                 ),
-                'sources': ListUtil.filter_list(
+                'source': ListUtil.filter_list(
                     None,
                     req.get_param('sources', default='').split(',')
                 )
