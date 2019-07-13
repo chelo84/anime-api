@@ -42,7 +42,7 @@ class Collection(object):
                 .sort(params['order_by'])
         )
 
-        resp.body = json_util.dumps(result, indent=4)
+        resp.body = json_util.dumps(result)
         resp.status = falcon.HTTP_OK
 
     def get_params(self, req):

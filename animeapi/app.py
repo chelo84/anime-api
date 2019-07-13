@@ -15,8 +15,6 @@ if environment == 'prd':
     MONGO_PORT = int(os.environ['MONGO_PORT'])
     MONGO_ANIMES_COLLECTION = 'animes'
     MONGO_DB = os.environ['MONGO_DB']
-    print('Mongo user: ' + MONGO_USER +
-          '\nMongo pass: ' + MONGO_PASS)
 else:
     MONGO_SERVER = '{host}'.format(host='localhost')
     MONGO_PORT = 27017
@@ -26,8 +24,6 @@ else:
 print('Mongo server: ' + MONGO_SERVER +
       '\nMongo port: ' + str(MONGO_PORT) +
       '\nMongo DB: ' + MONGO_DB +
-      '\nMongo user: ' + (MONGO_USER or 'local') +
-      '\nMongo pass: ' + (MONGO_PASS or 'local') +
       '\nMongo collection: ' + MONGO_ANIMES_COLLECTION)
 sys.stdout.flush()
 
