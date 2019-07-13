@@ -21,7 +21,7 @@ else:
     MONGO_DB = 'animeDB'
 
 print('Mongo server: ' + MONGO_SERVER +
-      'Mongo port: ' + MONGO_PORT +
+      'Mongo port: ' + str(MONGO_PORT) +
       'Mongo DB: ' + MONGO_DB +
       'Mongo collection: ' + MONGO_ANIMES_COLLECTION)
 sys.stdout.flush()
