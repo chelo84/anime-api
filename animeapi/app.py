@@ -1,5 +1,6 @@
 import os
 import sys
+from urllib.parse import quote
 
 import falcon
 import pymongo
@@ -9,8 +10,9 @@ import animeapi.anime as anime
 from animeapi.local_settings import environment
 
 if environment == 'prd':
-    MONGO_SERVER = '{user}:{password}@{host}'.format(user=os.environ['MONGO_USER'], password=os.environ['MONGO_PASS'],
-                                                     host=os.environ['MONGO_HOST'])
+    MONGO_SERVER = quote(
+        '{user}:{password}@{host}'.format(user=os.environ['MONGO_USER'], password=os.environ['MONGO_PASS'],
+                                          host=os.environ['MONGO_HOST']))
     MONGO_PORT = int(os.environ['MONGO_PORT'])
     MONGO_ANIMES_COLLECTION = 'animes'
     MONGO_DB = os.environ['MONGO_DB']
@@ -21,9 +23,9 @@ else:
     MONGO_DB = 'animeDB'
 
 print('Mongo server: ' + MONGO_SERVER +
-      'Mongo port: ' + str(MONGO_PORT) +
-      'Mongo DB: ' + MONGO_DB +
-      'Mongo collection: ' + MONGO_ANIMES_COLLECTION)
+      '\nMongo port: ' + str(MONGO_PORT) +
+      '\nMongo DB: ' + MONGO_DB +
+      '\nMongo collection: ' + MONGO_ANIMES_COLLECTION)
 sys.stdout.flush()
 
 
