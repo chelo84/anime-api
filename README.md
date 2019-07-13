@@ -10,6 +10,6 @@
     
     * Windows -> `virtualenv venv && venv\Scripts\activate && pip install -r requirements.txt` 
         
-    * Linux -> `virtualenv .env && source .env/bin/activate && pip install -r requirements.txt`
+    * Linux -> `virtualenv venv && source venv/bin/activate && pip install -r requirements.txt`
     
 * Then run `waitress-serve --port=8080 animeapi.app:api` to start the server
