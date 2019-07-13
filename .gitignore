@@ -56,3 +56,6 @@ dash
 # VSCode
 
 .vscode
+
+.venv/*
+animeapi/local_settings.py
