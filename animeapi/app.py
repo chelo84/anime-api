@@ -1,13 +1,30 @@
+import os
+import sys
+
 import falcon
 import pymongo
 from falcon.http_status import HTTPStatus
 
 import animeapi.anime as anime
+from animeapi.local_settings import environment
 
-MONGO_SERVER = 'localhost'
-MONGO_PORT = 27017
-MONGO_ANIMES_COLLECTION = 'animes'
-MONGO_DB = 'animeDB'
+if environment == 'prd':
+    MONGO_SERVER = '{user}:{password}@{host}'.format(user=os.environ['MONGO_USER'], password=os.environ['MONGO_PASS'],
+                                                     host=os.environ('MONGO_HOST'))
+    MONGO_PORT = os.environ['MONGO_PORT']
+    MONGO_ANIMES_COLLECTION = 'animes'
+    MONGO_DB = os.environ['MONGO_DB']
+else:
+    MONGO_SERVER = '{host}'.format(host='localhost')
+    MONGO_PORT = 27017
+    MONGO_ANIMES_COLLECTION = 'animes'
+    MONGO_DB = 'animeDB'
+
+print('Mongo server: ' + MONGO_SERVER +
+      'Mongo port: ' + MONGO_PORT +
+      'Mongo DB: ' + MONGO_DB +
+      'Mongo collection: ' + MONGO_ANIMES_COLLECTION)
+sys.stdout.flush()
 
 
 class HandleCORS(object):
