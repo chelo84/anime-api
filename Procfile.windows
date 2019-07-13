@@ -1,1 +1,1 @@
-web: waitress-serve —port=$PORT animeapi.app:api --log-level=DEBUG
+web: waitress-serve —port=$PORT animeapi.app:api
