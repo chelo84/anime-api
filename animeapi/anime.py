@@ -5,6 +5,7 @@ import pymongo
 from bson import json_util
 
 from animeapi.util.list_util import ListUtil
+from animeapi.util.param_util import ParamUtil
 from animeapi.util.query_util import QueryUtil
 
 
@@ -14,7 +15,7 @@ class Anime(object):
         self._animes_collection = animes_collection
 
     def on_get(self, req, resp):
-        params = self.get_params(req, resp)
+        params = self.get_params(req)
 
         params['order_by'] = params['order_by'] if len(params['order_by']) > 0 else [["_id", pymongo.ASCENDING]]
 
@@ -42,49 +43,45 @@ class Anime(object):
                 .sort(params['order_by'])
         )
 
-        resp.body = json_util.dumps(result)
+        resp.body = json_util.dumps(result, indent=(4 if params['pretty'] else None))
         resp.status = falcon.HTTP_OK
 
-    def get_params(self, req, resp):
-        try:
-            fields = ListUtil.filter_list(
+    def get_params(self, req):
+        fields = ListUtil.filter_list(
+            None,
+            req.get_param('fields', default='').split(',')
+        )
+        fields_filter, order_by = self.get_fields_and_order_items(fields)
+
+        params = {
+            'offset': ParamUtil.get_int_param(req, 'offset', 0),
+            'limit': ParamUtil.get_int_param(req, 'limit', 20),
+            'name': req.get_param('name', default=None),
+            'type': req.get_param('type', default=None),
+            'fields': fields_filter,
+            'order_by': order_by,
+            'score_min': ParamUtil.get_float_param(req, 'score_min', 0.00),
+            'score_max': ParamUtil.get_float_param(req, 'score_max', 10),
+            'pretty': req.get_param('pretty', default='True').lower() == 'true',
+            'genres': ListUtil.filter_list(
                 None,
-                req.get_param('fields', default='').split(',')
+                req.get_param('genres', default='').split(',')
+            ),
+            'producers': ListUtil.filter_list(
+                None,
+                req.get_param('producers', default='').split(',')
+            ),
+            'studios': ListUtil.filter_list(
+                None,
+                req.get_param('studios', default='').split(',')
+            ),
+            'source': ListUtil.filter_list(
+                None,
+                req.get_param('sources', default='').split(',')
             )
-            fields_filter, order_by = self.get_fields_and_order_items(fields)
+        }
 
-            params = {
-                'offset': int(req.get_param('offset', default=0)),
-                'limit': int(req.get_param('limit', default=20)), 'name': req.get_param('name', default=None),
-                'type': req.get_param('type', default=None),
-                'fields': fields_filter,
-                'order_by': order_by,
-                'score_min': float(req.get_param('score_min', default=0.00)),
-                'score_max': float(req.get_param('score_max', default=10)),
-                'genres': ListUtil.filter_list(
-                    None,
-                    req.get_param('genres', default='').split(',')
-                ),
-                'producers': ListUtil.filter_list(
-                    None,
-                    req.get_param('producers', default='').split(',')
-                ),
-                'studios': ListUtil.filter_list(
-                    None,
-                    req.get_param('studios', default='').split(',')
-                ),
-                'source': ListUtil.filter_list(
-                    None,
-                    req.get_param('sources', default='').split(',')
-                )
-            }
-
-            return params
-
-        except ValueError as ex:
-            print(getattr(ex, 'message', repr(ex)))
-
-            raise falcon.HTTPBadRequest('Wrong parameter', 'One parameter was not of the needed type')
+        return params
 
     def get_fields_and_order_items(self, fields):
         order_by = []
