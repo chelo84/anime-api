@@ -8,7 +8,7 @@ from animeapi.util.list_util import ListUtil
 from animeapi.util.query_util import QueryUtil
 
 
-class Collection(object):
+class Anime(object):
 
     def __init__(self, animes_collection):
         self._animes_collection = animes_collection

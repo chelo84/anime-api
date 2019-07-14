@@ -6,6 +6,7 @@ import pymongo
 from falcon.http_status import HTTPStatus
 
 import animeapi.anime as anime
+import animeapi.health_check as health_check
 from animeapi.local_settings import environment
 
 if environment == 'prd':
@@ -40,8 +41,8 @@ class HandleCORS(object):
 
 def create_app(collection):
     api = falcon.API(middleware=[HandleCORS()])
-    api.add_route('/animes', anime.Collection(collection))
-    # api.add_route('/anime/{page:int}', anime.Collection(collection))
+    api.add_route('/status/check', health_check.Check())
+    api.add_route('/animes', anime.Anime(collection))
     return api
 
 
