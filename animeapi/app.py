@@ -7,6 +7,7 @@ from falcon.http_status import HTTPStatus
 
 import animeapi.anime as anime
 import animeapi.health_check as health_check
+import animeapi.home as home
 from animeapi.local_settings import environment
 
 if environment == 'prd':
@@ -41,6 +42,7 @@ class HandleCORS(object):
 
 def create_app(collection):
     api = falcon.API(middleware=[HandleCORS()])
+    api.add_route('/', home.Home())
     api.add_route('/status/check', health_check.Check())
     api.add_route('/animes', anime.Anime(collection))
     return api
