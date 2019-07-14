@@ -14,7 +14,7 @@ class Anime(object):
         self._animes_collection = animes_collection
 
     def on_get(self, req, resp):
-        params = self.get_params(req)
+        params = self.get_params(req, resp)
 
         params['order_by'] = params['order_by'] if len(params['order_by']) > 0 else [["_id", pymongo.ASCENDING]]
 
@@ -45,7 +45,7 @@ class Anime(object):
         resp.body = json_util.dumps(result)
         resp.status = falcon.HTTP_OK
 
-    def get_params(self, req):
+    def get_params(self, req, resp):
         try:
             fields = ListUtil.filter_list(
                 None,
@@ -82,7 +82,9 @@ class Anime(object):
             return params
 
         except ValueError as ex:
-            raise falcon.HTTPBadRequest('Bad request', ex)
+            print(getattr(ex, 'message', repr(ex)))
+
+            raise falcon.HTTPBadRequest('Wrong parameter', 'One parameter was not of the needed type')
 
     def get_fields_and_order_items(self, fields):
         order_by = []
