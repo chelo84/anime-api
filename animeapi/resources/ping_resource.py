@@ -1,7 +1,7 @@
 import falcon
 
 
-class Check(object):
+class PingResource(object):
     def on_get(self, req, resp):
-        resp.body = 'Everything is fine :)'
+        resp.body = 'Pong'
         resp.status = falcon.HTTP_OK

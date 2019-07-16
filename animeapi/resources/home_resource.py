@@ -1,7 +1,7 @@
 import falcon
 
 
-class Home(object):
+class HomeResource(object):
     def on_get(self, req, resp):
         resp.body = '<div style="display: flex;align-items: center;flex-direction: column;">' \
                         '<h3>' \

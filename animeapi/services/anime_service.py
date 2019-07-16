@@ -1,20 +1,18 @@
 import re
 
-import falcon
 import pymongo
-from bson import json_util
 
 from animeapi.util.list_util import ListUtil
 from animeapi.util.param_util import ParamUtil
 from animeapi.util.query_util import QueryUtil
 
 
-class Anime(object):
+class AnimeService:
 
     def __init__(self, animes_collection):
         self._animes_collection = animes_collection
 
-    def on_get(self, req, resp):
+    def find(self, req):
         params = self.get_params(req)
 
         params['order_by'] = params['order_by'] if len(params['order_by']) > 0 else [["_id", pymongo.ASCENDING]]
@@ -43,8 +41,7 @@ class Anime(object):
                 .sort(params['order_by'])
         )
 
-        resp.body = json_util.dumps(result, indent=(4 if params['pretty'] else None))
-        resp.status = falcon.HTTP_OK
+        return result
 
     def get_params(self, req):
         fields = ListUtil.filter_list(
@@ -62,7 +59,6 @@ class Anime(object):
             'order_by': order_by,
             'score_min': ParamUtil.get_float_param(req, 'score_min', 0.00),
             'score_max': ParamUtil.get_float_param(req, 'score_max', 10),
-            'pretty': req.get_param('pretty', default='True').lower() == 'true',
             'genres': ListUtil.filter_list(
                 None,
                 req.get_param('genres', default='').split(',')
