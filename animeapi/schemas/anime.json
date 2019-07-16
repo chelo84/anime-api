@@ -1,0 +1,143 @@
+{
+  "title": "Anime",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "episodes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "status": {
+      "type": "string"
+    },
+    "aired_from": {
+      "type": "string"
+    },
+    "aired_to": {
+      "type": "string"
+    },
+    "premiered": {
+      "type": "string"
+    },
+    "broadcast": {
+      "type": "string"
+    },
+    "producers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "licensors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "studios": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": {
+      "type": "string"
+    },
+    "genres": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "duration": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "string"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "scored_by": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ranked": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "popularity": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "members": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "synopsis":{
+      "type": "string"
+    },
+    "characters": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/character"}
+    }
+  },
+  "definitions": {
+    "character": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "actors": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/actor"}
+        }
+      }
+    },
+    "actor": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "episodes",
+    "status",
+    "genres",
+    "score"
+  ]
+}
