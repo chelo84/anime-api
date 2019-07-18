@@ -5,6 +5,7 @@ import pymongo
 from animeapi.util.list_util import ListUtil
 from animeapi.util.param_util import ParamUtil
 from animeapi.util.query_util import QueryUtil
+from datetime import datetime
 
 
 class AnimeService:
@@ -91,3 +92,10 @@ class AnimeService:
 
             fields_filter[field] = 1
         return fields_filter, order_by
+
+    def add_anime(self, anime_req):
+        anime_req["created_at"] = datetime.now()
+        result = self._animes_collection.insert_one(anime_req)
+        new_anime_id = result.inserted_id
+
+        return new_anime_id

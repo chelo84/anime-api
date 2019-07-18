@@ -20,5 +20,13 @@ class AnimeResource:
 
     @jsonschema.validate(load_schema('anime'))
     def on_post(self, req, resp):
-        resp.body = "Not yet developed"
+        req_json = req.media
+        new_anime_id = self._anime_service.add_anime(req_json)
+
+        body = {
+            "message": "Anime created",
+            "id": str(new_anime_id)
+        }
+
+        resp.body = json_util.dumps(body)
         resp.status = falcon.HTTP_CREATED
