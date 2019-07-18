@@ -1,5 +1,5 @@
 import re
-
+import falcon
 import pymongo
 
 from animeapi.util.list_util import ListUtil
@@ -94,8 +94,11 @@ class AnimeService:
         return fields_filter, order_by
 
     def add_anime(self, anime_req):
-        anime_req["created_at"] = datetime.now()
-        result = self._animes_collection.insert_one(anime_req)
-        new_anime_id = result.inserted_id
-
+        query = self._animes_collection.find_one({'name': anime_req['name']})
+        if not query:
+            anime_req["created_at"] = datetime.now()
+            result = self._animes_collection.insert_one(anime_req)
+            new_anime_id = result.inserted_id
+        else:
+            raise falcon.HTTPBadRequest('Anime already exists', "There is already an anime with the name '" + anime_req['name'] +"'")
         return new_anime_id

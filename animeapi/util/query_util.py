@@ -46,3 +46,9 @@ class QueryUtil(object):
             '$gte': query_param_min,
             '$lte': query_param_max
         }
+
+    @staticmethod
+    def query_eq(query_param):
+        return {
+            '$eq': query_param
+        }
