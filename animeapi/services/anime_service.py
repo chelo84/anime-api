@@ -1,11 +1,12 @@
 import re
+from datetime import datetime
+
 import falcon
 import pymongo
 
 from animeapi.util.list_util import ListUtil
 from animeapi.util.param_util import ParamUtil
 from animeapi.util.query_util import QueryUtil
-from datetime import datetime
 
 
 class AnimeService:
@@ -93,12 +94,25 @@ class AnimeService:
             fields_filter[field] = 1
         return fields_filter, order_by
 
-    def add_anime(self, anime_req):
-        query = self._animes_collection.find_one({'name': anime_req['name']})
+    def add_anime(self, req_json):
+        new_anime = {'url': req_json.get('url'),
+                     'image': req_json.get('image'),
+                     'name': req_json.get('name'),
+                     'type': req_json.get('type'),
+                     'episodes': req_json.get('episodes'),
+                     'status': req_json.get('status'),
+                     'source': req_json.get('source'),
+                     'genres': req_json.get('genres') if req_json.get('genres') and all(
+                         type(genre) == str for genre in req_json.get('genres')) else [],
+                     'synopsis': req_json.get('synopsis')}
+
+        query = self._animes_collection.find_one({'name': new_anime['name']})
         if not query:
-            anime_req["created_at"] = datetime.now()
-            result = self._animes_collection.insert_one(anime_req)
+            new_anime["created_at"] = datetime.now()
+            result = self._animes_collection.insert_one(new_anime)
             new_anime_id = result.inserted_id
         else:
-            raise falcon.HTTPBadRequest('Anime already exists', "There is already an anime with the name '" + anime_req['name'] +"'")
+            raise falcon.HTTPBadRequest('Anime already exists',
+                                        "There is already an anime with the name '" + new_anime['name'] + "'")
+
         return new_anime_id

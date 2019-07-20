@@ -18,9 +18,10 @@ class AnimeResource:
         resp.body = json_util.dumps(result, indent=(4 if pretty else None))
         resp.status = falcon.HTTP_OK
 
-    @jsonschema.validate(load_schema('anime'))
+    @jsonschema.validate(load_schema('new_anime'))
     def on_post(self, req, resp):
         req_json = req.media
+
         new_anime_id = self._anime_service.add_anime(req_json)
 
         body = {
