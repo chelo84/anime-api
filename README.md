@@ -4,7 +4,7 @@
 
 * First of all:
     * Have python and virtualenv installed.
-    * Have mongo installed and restore it with the `animeDB.animes.json` file.
+    * Have mongo installed and restore it with the `animes.json` file in `dump.zip`.
     
 * Run the command to set up the environment:
     

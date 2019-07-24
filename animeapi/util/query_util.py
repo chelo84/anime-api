@@ -26,7 +26,7 @@ class QueryUtil(object):
 
     @staticmethod
     def query_regex(query_param):
-        return re.compile(query_param, re.IGNORECASE)
+        return re.compile('.*' + query_param + '.*', re.IGNORECASE)
 
     @staticmethod
     def query_gt(query_param):
