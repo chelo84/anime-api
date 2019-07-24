@@ -22,12 +22,7 @@ class AnimeResource:
     def on_post(self, req, resp):
         req_json = req.media
 
-        new_anime_id = self._anime_service.add_anime(req_json)
+        new_anime = self._anime_service.add_anime(req_json)
 
-        body = {
-            "message": "Anime created",
-            "id": str(new_anime_id)
-        }
-
-        resp.body = json_util.dumps(body)
+        resp.body = json_util.dumps(new_anime)
         resp.status = falcon.HTTP_CREATED
