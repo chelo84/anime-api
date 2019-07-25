@@ -22,7 +22,16 @@ class AnimeResource:
     def on_post(self, req, resp):
         req_json = req.media
 
-        new_anime = self._anime_service.add_anime(req_json)
+        new_anime = self._anime_service.add(req_json)
 
         resp.body = json_util.dumps(new_anime)
         resp.status = falcon.HTTP_CREATED
+
+    @jsonschema.validate(load_schema('anime'))
+    def on_put(self, req, resp):
+        req_json = req.media
+
+        updated_anime = self._anime_service.update(req_json)
+
+        resp.body = json_util.dumps(updated_anime)
+        resp.status = falcon.HTTP_OK

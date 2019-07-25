@@ -93,7 +93,7 @@ class AnimeService:
             fields_filter[field] = 1
         return fields_filter, order_by
 
-    def add_anime(self, req_json):
+    def add(self, req_json):
         new_anime = {'url': req_json.get('url'),
                      'image': req_json.get('image'),
                      'name': req_json.get('name'),
@@ -111,3 +111,13 @@ class AnimeService:
         new_anime = self._animes_collection.find_one({'_id': id})
 
         return new_anime
+
+    def update(self, req_json, req_id):
+        id = req_json['_id'] or req_json['id']
+        if not id and not req_id:
+            print("no id")
+        if req_id and id and id != req_id:
+            print("id != req_id")
+
+        id = (id or req_id)
+        print(id)

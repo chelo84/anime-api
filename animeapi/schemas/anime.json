@@ -2,6 +2,10 @@
   "title": "Anime",
   "type": "object",
   "properties": {
+    "_id": {
+      "type": "string",
+      "format": "uuid"
+    },
     "url": {
       "type": "string"
     },
